@@ -37,7 +37,7 @@ export class App extends React.Component {
         return <div className={css.wrapper}>
             <input  value={city} placeholder='your city' onChange = {(e) => this.setState({city: e.target.value})} />
             {this.state.loadStatus === LOAD_STATUSES.LOADING && <Loader/>}
-            {this.state.loadstatus === LOAD_STATUSES.ERROR && <p>Не удалось получить данные, попробуйте изменить запрос</p>}
+            {this.state.loadStatus === LOAD_STATUSES.ERROR && <p>Не удалось получить данные, попробуйте изменить запрос</p>}
             {this.state.loadStatus === LOAD_STATUSES.LOADED && 
             <WeatherTable {...data}/>
             }
