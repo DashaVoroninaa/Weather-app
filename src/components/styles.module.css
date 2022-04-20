@@ -1,0 +1,25 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+thead {
+    border-radius: 5px;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 5px;
+    background-color: #f1c0e8;
+    
+}
+
+th, td {
+    height: 20px;
+    width: 180px;
+    padding: 5px;
+    text-align: center;
+    color: gray;
+} 
