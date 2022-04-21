@@ -1,7 +1,5 @@
 import React from 'react'
 import {debounce} from 'lodash'
-import {getCurrentWeather} from '../api'
-import {LOAD_STATUSES} from '../constants'
 import {Loader} from './common'
 import {WeatherTable} from './WeatherTable'
 import css from './styles.module.css'
@@ -14,20 +12,7 @@ export class AppTwo extends React.Component {
         city: '',
     };
 
-    fetchWeather = (city) => {
-        const {onStart, onError, onSuccess} = this.props
-
-        onStart(city)
-    
-        getCurrentWeather(city)
-            .then((data) => {
-            onSuccess(data)
-        }).catch(() => {
-            onError()
-        })
-    }
-
-    fetchWeatherDebounced = debounce(this.fetchWeather, 1000)
+    fetchWeatherDebounced = debounce(this.props.getWeather, 1000)
 
     componentDidUpdate(_, prevState) {
         if(prevState.city !== this.state.city) {
@@ -61,9 +46,7 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onStart: () => dispatch(WeatherAC.fetchStart()),
-        onError: () => dispatch(WeatherAC.fetchError()),
-        onSuccess: (weather) => dispatch(WeatherAC.fetchSuccess(weather)),
+        getWeather: (city) => dispatch(WeatherAC.fetchWeather(city))
     }
 }
 

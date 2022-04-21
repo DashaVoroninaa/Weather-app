@@ -1,6 +1,5 @@
 import {LOAD_STATUSES} from '../constants/loadStatuses'
 import {WEATHER_ACTIONS} from './constants'
-import * as WeatherAC from './actionCreators'
 
 const INITIAL_STATE = {
     data: {},
