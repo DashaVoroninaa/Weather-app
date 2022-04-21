@@ -5,24 +5,28 @@ import {LOAD_STATUSES} from '../constants'
 import {Loader} from './common'
 import {WeatherTable} from './WeatherTable'
 import css from './styles.module.css'
+import {connect} from 'react-redux'
+import { WeatherSelectors } from '../store'
+import { WeatherAC } from '../store'
 
-export class App extends React.Component {
+export class AppTwo extends React.Component {
     state = {
         city: '',
-        data: {},
-        loadStatus: LOAD_STATUSES.UNKNOWN,
     };
 
-    fetchWeather = (params) => {
-        this.setState({loadStatus: LOAD_STATUSES.LOADING})
+    fetchWeather = (city) => {
+        const {onStart, onError, onSuccess} = this.props
+
+        onStart(city)
     
-        getCurrentWeather(params).then(({main, weather}) => {
-            this.setState({loadStatus: LOAD_STATUSES.LOADED, data:{...main, icon: weather[0].icon} })
+        getCurrentWeather(city)
+            .then((data) => {
+            onSuccess(data)
         }).catch(() => {
-            this.setState({loadStatus: LOAD_STATUSES.ERROR, data: {}})
+            onError()
         })
     }
-    
+
     fetchWeatherDebounced = debounce(this.fetchWeather, 1000)
 
     componentDidUpdate(_, prevState) {
@@ -32,15 +36,35 @@ export class App extends React.Component {
     }
     
     render() {
-        const {city, data} = this.state
+        const {city} = this.state
+        const {data, isLoading, isError, isLoaded} = this.props 
 
-        return <div className={css.wrapper}>
-            <input  value={city} placeholder='your city' onChange = {(e) => this.setState({city: e.target.value})} />
-            {this.state.loadStatus === LOAD_STATUSES.LOADING && <Loader/>}
-            {this.state.loadStatus === LOAD_STATUSES.ERROR && <p>Не удалось получить данные, попробуйте изменить запрос</p>}
-            {this.state.loadStatus === LOAD_STATUSES.LOADED && 
+        return (<div className={css.wrapper}>
+            <input type=''  value={city} placeholder='your city' onChange = {(e) => this.setState({city: e.target.value})} />
+            {isLoading && <Loader/>}
+            {isError && <p>Не удалось получить данные, попробуйте изменить запрос</p>}
+            {isLoaded && 
             <WeatherTable {...data}/>
             }
-        </div>
+        </div>)
     };
 };
+
+const mapStatetoProps = (state) => {
+    return {
+        data: WeatherSelectors.getWeather(state),
+        isLoading: WeatherSelectors.getWeather(state),
+        isError: WeatherSelectors.getWeather(state),
+        isLoaded: WeatherSelectors.getWeather(state),
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onStart: () => dispatch(WeatherAC.fetchStart()),
+        onError: () => dispatch(WeatherAC.fetchError()),
+        onSuccess: (weather) => dispatch(WeatherAC.fetchSuccess(weather)),
+    }
+}
+
+export const App =  connect(mapStatetoProps, mapDispatchToProps)(AppTwo)
