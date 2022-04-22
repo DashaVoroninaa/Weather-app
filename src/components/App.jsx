@@ -38,9 +38,9 @@ export class AppTwo extends React.Component {
 const mapStatetoProps = (state) => {
     return {
         data: WeatherSelectors.getWeather(state),
-        isLoading: WeatherSelectors.getWeather(state),
-        isError: WeatherSelectors.getWeather(state),
-        isLoaded: WeatherSelectors.getWeather(state),
+        isLoading: WeatherSelectors.isLoading(state),
+        isError: WeatherSelectors.isError(state),
+        isLoaded: WeatherSelectors.isLoaded(state),
     }
 }
 
